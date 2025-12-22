@@ -25,8 +25,8 @@ public class DeadListener {
   public void onPlayerRespawn(PlayerRespawnEvent event) {
       this.deadManager.removeDeadPlayer(event.getPlayer());
       /*
-      TO DO: override default respawn button event to make it into a button that removes players
-      from the deadPlayer set and once everyone is alive it can respawn everyone
+      TO DO: pressing respawn should be a vote and once everyone votes yes everyone respawns
+
       */
       if (this.deadManager.areAllAlive()) {}
   }
