@@ -2,12 +2,17 @@ package shared.health.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 public class SharedHealthManager {
   private double sharedHealth;
   private final double maxHealth;
+  private boolean slaughter = false;
+  private final Plugin plugin;
 
-  public SharedHealthManager(double startingHealth) {
+  public SharedHealthManager(Plugin plugin, double startingHealth) {
+    this.plugin = plugin;
     this.maxHealth = startingHealth;
     this.sharedHealth = startingHealth;
   }
@@ -18,6 +23,10 @@ public class SharedHealthManager {
 
   public double getMaxHealth() {
     return this.maxHealth;
+  }
+
+  public boolean isSlaughtering() {
+    return this.slaughter;
   }
 
   public void fillSharedHealth() {
@@ -33,20 +42,26 @@ public class SharedHealthManager {
   public void subtractSharedHealth(double amnt) {
     this.sharedHealth = this.sharedHealth - amnt;
     if (this.sharedHealth <= 0) {
-      this.killAllPlayers();
+      this.handleServerDeath();
     }
     this.updateAllPlayerHealthBars(this.sharedHealth);
   }
 
-  public void killAllPlayers() {
-    Bukkit.getOnlinePlayers().forEach(p -> p.setHealth(0.0));
+  public void handleServerDeath() {
+    this.slaughter = true;
+    this.plugin.getServer().getScheduler().runTask(plugin, () -> {
+      for (var p : Bukkit.getOnlinePlayers())
+        p.setHealth(0.0);
+     });
+    this.slaughter = false;
+    this.fillSharedHealth();
   }
 
   private void updateAllPlayerHealthBars(double sharedHealth) {
     Bukkit.getOnlinePlayers().forEach(p -> {
       double fraction = sharedHealth / this.getMaxHealth();
       double maxHealth = p.getAttribute(Attribute.MAX_HEALTH).getValue();
-      double health = Math.max(0, Math.min(fraction * maxHealth, maxHealth));
+      double health = Math.max(0.1, Math.min(fraction * maxHealth, maxHealth));
       p.setHealth(health);
     });
   }
