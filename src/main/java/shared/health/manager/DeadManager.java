@@ -18,6 +18,10 @@ public class DeadManager {
     return Collections.unmodifiableSet(this.deadPlayers);
   }
 
+  public void clearAllDeadPlayers() {
+    deadPlayers.clear();
+  }
+
   public boolean isPlayerDead(Player p) {
     return this.deadPlayers.contains(p.getUniqueId());
   }
