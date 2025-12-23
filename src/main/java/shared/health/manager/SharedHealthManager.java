@@ -1,4 +1,4 @@
-package shared.health;
+package shared.health.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;

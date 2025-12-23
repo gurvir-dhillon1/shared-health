@@ -1,16 +1,21 @@
-package shared.health;
+package shared.health.manager;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class DeadManager {
-  private HashSet<UUID> deadPlayers;
+  private Set<UUID> deadPlayers = new HashSet<>();
   
   public DeadManager() {
     this.deadPlayers = new HashSet<>();
+  }
+
+  public Set<UUID> getDeadPlayers() {
+    return Collections.unmodifiableSet(this.deadPlayers);
   }
 
   public boolean isPlayerDead(Player p) {

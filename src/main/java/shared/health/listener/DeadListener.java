@@ -2,12 +2,13 @@ package shared.health.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import shared.health.DeadManager;
+import shared.health.manager.DeadManager;
 
-public class DeadListener {
+public class DeadListener implements Listener {
   private DeadManager deadManager;
 
   public DeadListener(DeadManager deadManager) {
@@ -21,13 +22,4 @@ public class DeadListener {
     }
   }
 
-  @EventHandler
-  public void onPlayerRespawn(PlayerRespawnEvent event) {
-      this.deadManager.removeDeadPlayer(event.getPlayer());
-      /*
-      TO DO: pressing respawn should be a vote and once everyone votes yes everyone respawns
-
-      */
-      if (this.deadManager.areAllAlive()) {}
-  }
 }
