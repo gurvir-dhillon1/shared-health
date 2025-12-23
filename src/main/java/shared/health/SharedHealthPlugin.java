@@ -3,6 +3,8 @@ package shared.health;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import shared.health.listener.SharedHealthListener;
+import shared.health.manager.DeadManager;
+import shared.health.manager.SharedHealthManager;
 
 public class SharedHealthPlugin extends JavaPlugin {
 
