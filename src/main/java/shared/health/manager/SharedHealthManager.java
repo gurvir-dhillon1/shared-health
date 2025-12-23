@@ -20,6 +20,11 @@ public class SharedHealthManager {
     return this.maxHealth;
   }
 
+  public void fillSharedHealth() {
+    this.sharedHealth = this.maxHealth;
+    this.updateAllPlayerHealthBars(this.sharedHealth);
+  }
+
   public void addSharedHealth(double amnt) {
     this.sharedHealth = Math.min(this.maxHealth, this.sharedHealth + amnt);
     this.updateAllPlayerHealthBars(this.sharedHealth);
