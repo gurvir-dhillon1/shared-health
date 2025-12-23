@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
-import shared.health.DeadManager;
-import shared.health.SharedHealthManager;
+import shared.health.manager.DeadManager;
+import shared.health.manager.SharedHealthManager;
 
 public class SharedHealthListener implements Listener {
   private final SharedHealthManager healthManager;
