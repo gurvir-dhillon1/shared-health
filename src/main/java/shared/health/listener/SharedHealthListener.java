@@ -6,31 +6,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 
-import shared.health.DeadManager;
-import shared.health.SharedHealthManager;
+import shared.health.manager.SharedHealthManager;
 
 public class SharedHealthListener implements Listener {
   private final SharedHealthManager healthManager;
-  private final DeadManager deadManager;
 
-  public SharedHealthListener(SharedHealthManager manager, DeadManager deadManager) {
+  public SharedHealthListener(SharedHealthManager manager) {
     this.healthManager = manager;
-    this.deadManager = deadManager;
   }
 
   @EventHandler
   public void onPlayerDamage(EntityDamageEvent event) {
-    if (event.getEntity() instanceof Player p) {
-      if (this.deadManager.isPlayerDead(p)) return;
-      event.setCancelled(true);
-      healthManager.subtractSharedHealth(event.getFinalDamage());
-    }
+    if (!(event.getEntity() instanceof Player)) return;
+    if (this.healthManager.isSlaughtering()) return;
+    event.setCancelled(true);
+    healthManager.subtractSharedHealth(event.getFinalDamage());
   }
 
   @EventHandler
   public void onPlayerHeal(EntityRegainHealthEvent event) {
-    if (event.getEntity() instanceof Player p) {
-      if (this.deadManager.isPlayerDead(p)) return;
+    if (event.getEntity() instanceof Player) {
       event.setCancelled(true);
       healthManager.addSharedHealth(event.getAmount());
     }
