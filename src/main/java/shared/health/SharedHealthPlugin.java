@@ -11,7 +11,7 @@ public class SharedHealthPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.healthManager = new SharedHealthManager(20);
+        this.healthManager = new SharedHealthManager(this, 20);
         SharedHealthListener sharedHealthListener = new SharedHealthListener(this.healthManager);
         getServer().getPluginManager().registerEvents(sharedHealthListener, this);
     }
