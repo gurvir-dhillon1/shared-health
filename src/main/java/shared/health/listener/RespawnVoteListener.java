@@ -23,8 +23,10 @@ public class RespawnVoteListener implements Listener{
 
   @EventHandler
   public void onPlayerRespawn(PlayerRespawnEvent event) {
-    respawnVoteManager.vote(event.getPlayer());
-    if (respawnVoteManager.hasMajority(Bukkit.getOnlinePlayers().size()))
-      respawnController.respawnAllPlayers();
+    this.respawnVoteManager.vote(event.getPlayer());
+    if (this.respawnVoteManager.hasMajority(Bukkit.getOnlinePlayers().size())) {
+      this.respawnController.respawnAllPlayers();
+      this.respawnVoteManager.reset();
+    }
   }
 }
