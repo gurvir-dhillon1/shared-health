@@ -6,17 +6,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import shared.health.controller.RespawnController;
-import shared.health.manager.DeadManager;
 import shared.health.manager.RespawnVoteManager;
 
 public class RespawnVoteListener implements Listener{
 
-  private final DeadManager deadManager;
   private final RespawnVoteManager respawnVoteManager;
   private final RespawnController respawnController;
 
-  public RespawnVoteListener(DeadManager deadManager, RespawnController respawnController, RespawnVoteManager respawnVoteManager) {
-    this.deadManager = deadManager;
+  public RespawnVoteListener(RespawnController respawnController, RespawnVoteManager respawnVoteManager) {
     this.respawnController = respawnController;
     this.respawnVoteManager = respawnVoteManager;
   }
