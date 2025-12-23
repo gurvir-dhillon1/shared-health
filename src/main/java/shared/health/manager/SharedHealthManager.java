@@ -2,7 +2,6 @@ package shared.health.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class SharedHealthManager {
