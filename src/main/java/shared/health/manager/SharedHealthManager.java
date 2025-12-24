@@ -2,6 +2,8 @@ package shared.health.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
 public class SharedHealthManager {
@@ -38,19 +40,27 @@ public class SharedHealthManager {
     this.updateAllPlayerHealthBars(this.sharedHealth);
   }
 
-  public void subtractSharedHealth(double amnt) {
+  public void subtractSharedHealth(double amnt, Entity p, DamageSource e) {
     this.sharedHealth = this.sharedHealth - amnt;
     if (this.sharedHealth <= 0) {
-      this.handleServerDeath();
+      this.handleServerDeath(p, e);
     }
     this.updateAllPlayerHealthBars(this.sharedHealth);
   }
 
-  public void handleServerDeath() {
+  public void handleServerDeath(Entity deadPlayer, DamageSource cause) {
     this.slaughter = true;
+    String deadPlayerName = deadPlayer == null ? "Unknown player" : deadPlayer.getName();
+    String killerName = "unknown";
+    if (cause.getCausingEntity() != null)
+      killerName = cause.getCausingEntity().getName();
+    else if (cause != null)
+      killerName = cause.getDamageType().getDeathMessageType().toString().replace('_', ' ').toLowerCase();
+    final String trueKiller = killerName;
     this.plugin.getServer().getScheduler().runTask(plugin, () -> {
       for (var p : Bukkit.getOnlinePlayers())
         p.setHealth(0.0);
+      Bukkit.broadcastMessage(String.format("%s died to %s", deadPlayerName, trueKiller));
      });
     this.slaughter = false;
     this.fillSharedHealth();
