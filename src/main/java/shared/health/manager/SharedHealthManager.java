@@ -55,7 +55,7 @@ public class SharedHealthManager {
     if (cause.getCausingEntity() != null)
       killerName = cause.getCausingEntity().getName();
     else if (cause != null)
-      killerName = cause.getDamageType().getDeathMessageType().toString().replace('_', ' ').toLowerCase();
+      killerName = cause.getDamageType().getKey().getKey().replace('_', ' ').toLowerCase();
     final String trueKiller = killerName;
     this.plugin.getServer().getScheduler().runTask(plugin, () -> {
       for (var p : Bukkit.getOnlinePlayers())
