@@ -1,6 +1,5 @@
 package shared.health.listener;
 
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,11 +17,10 @@ public class SharedHealthListener implements Listener {
 
   @EventHandler
   public void onPlayerDamage(EntityDamageEvent event) {
-    if (!(event.getEntity() instanceof Player p)) return;
+    if (!(event.getEntity() instanceof Player)) return;
     if (this.healthManager.isSlaughtering()) return;
-    p.getWorld().playSound(p, Sound.ENTITY_PLAYER_HURT, 1.0f, 1.0f);
-    event.setCancelled(true);
-    healthManager.subtractSharedHealth(event.getFinalDamage());
+    healthManager.subtractSharedHealth(event.getFinalDamage(), event.getEntity(), event.getDamageSource());
+    event.setDamage(0.0);
   }
 
   @EventHandler
