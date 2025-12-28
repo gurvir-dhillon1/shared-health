@@ -10,6 +10,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
+import net.kyori.adventure.text.Component;
+
 public class SharedHealthManager {
   private double sharedHealth;
   private final double maxHealth;
@@ -64,7 +66,7 @@ public class SharedHealthManager {
     this.plugin.getServer().getScheduler().runTask(plugin, () -> {
       for (var p : Bukkit.getOnlinePlayers())
         p.setHealth(0.0);
-      Bukkit.broadcastMessage(String.format("%s died to %s", deadPlayerName, trueKiller));
+      Bukkit.broadcast(Component.text(String.format("%s died to %s", deadPlayerName, trueKiller)));
      });
     this.slaughter = false;
     this.fillSharedHealth();
