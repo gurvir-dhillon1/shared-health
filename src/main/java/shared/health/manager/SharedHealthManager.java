@@ -71,8 +71,8 @@ public class SharedHealthManager {
         p.setHealth(0.0);
       Bukkit.broadcast(Component.text(String.format("%s died to %s", deadPlayerName, trueKiller)));
       this.slaughter = false;
-      this.fillSharedHealth();
      });
+    this.fillSharedHealth();
   }
 
   private void updateAllPlayerHealthBars(double sharedHealth, boolean spawnParticle) {
