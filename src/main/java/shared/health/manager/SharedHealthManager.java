@@ -1,10 +1,14 @@
 package shared.health.manager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.Vector;
 
 public class SharedHealthManager {
   private double sharedHealth;
@@ -72,6 +76,19 @@ public class SharedHealthManager {
       double maxHealth = p.getAttribute(Attribute.MAX_HEALTH).getValue();
       double health = Math.max(0.1, Math.min(fraction * maxHealth, maxHealth));
       p.setHealth(health);
+      Location eyeLoc = p.getEyeLocation();
+      Vector direction = eyeLoc.getDirection();
+      double distanceInFront = 0.6;
+      Location particleLoc = eyeLoc.clone().add(direction.multiply(distanceInFront));
+
+      p.getWorld().spawnParticle(
+        Particle.ENTITY_EFFECT,
+        particleLoc,
+        7,
+        0.3, 0.3, 0.3,
+        0,
+        Color.fromRGB(255, 50, 50)
+      );
     });
   }
 }
