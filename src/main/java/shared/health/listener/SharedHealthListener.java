@@ -28,7 +28,6 @@ public class SharedHealthListener implements Listener {
   @EventHandler
   public void onPlayerHeal(EntityRegainHealthEvent event) {
     if (event.getEntity() instanceof Player) {
-      event.setCancelled(true);
       healthManager.healOtherPlayers(event.getAmount(), event.getEntity());
     }
   }
