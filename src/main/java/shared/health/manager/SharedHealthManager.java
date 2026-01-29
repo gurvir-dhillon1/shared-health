@@ -25,24 +25,26 @@ public class SharedHealthManager {
     return this.slaughter;
   }
 
-  public void damageOtherPlayers(double damage, Entity p, DamageSource e) {
+  private void setSlaughter(boolean slaughter) {
+    this.slaughter = slaughter;
+  }
+
+  public void healOtherPlayers(double amount, Entity p) {
+    this.setOtherPlayersHealth(amount, p, null);
+  }
+
+  public void setOtherPlayersHealth(double amount, Entity p, DamageSource e) {
     if (this.isSlaughtering()) return;
     for (var otherPlayer : Bukkit.getOnlinePlayers()) {
       if (otherPlayer == p) continue;
-      otherPlayer.damage(damage);
-      this.spawnParticles(otherPlayer);
+      otherPlayer.setHealth(Math.max(0,Math.min(20, ((Player) p).getHealth() + amount)));
+      if (amount < 0) this.spawnParticles(otherPlayer);
     }
   }
 
-  public void healOtherPlayers(double amount) {
-    if (this.isSlaughtering()) return;
-    for (var otherPlayer : Bukkit.getOnlinePlayers()) {
-      otherPlayer.setHealth(Math.min(otherPlayer.getAttribute(Attribute.MAX_HEALTH).getValue(), otherPlayer.getHealth() + amount));
-    }
-  }
 
   public void handleServerDeath(Entity deadPlayer, DamageSource cause) {
-    this.slaughter = true;
+    this.setSlaughter(true);
     String deadPlayerName = deadPlayer == null ? "Unknown player" : deadPlayer.getName();
     String killerName = "unknown";
     if (cause.getCausingEntity() != null)
@@ -54,7 +56,7 @@ public class SharedHealthManager {
       for (var p : Bukkit.getOnlinePlayers())
         p.setHealth(0.0);
       Bukkit.broadcast(Component.text(String.format("%s died to %s", deadPlayerName, trueKiller)));
-      this.slaughter = false;
+    this.setSlaughter(false);
      });
   }
 

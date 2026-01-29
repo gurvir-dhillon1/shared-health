@@ -11,6 +11,7 @@ import shared.health.manager.SharedHealthManager;
 
 public class SharedHealthListener implements Listener {
   private final SharedHealthManager healthManager;
+  private boolean slaughter = false;
 
   public SharedHealthListener(SharedHealthManager manager) {
     this.healthManager = manager;
@@ -21,19 +22,20 @@ public class SharedHealthListener implements Listener {
     if (!(event.getEntity() instanceof Player)) return;
     if (this.healthManager.isSlaughtering()) return;
     // TODO: Stop infinite damage loop through some kind of flag or damage tracking
-    healthManager.damageOtherPlayers(event.getFinalDamage(), event.getEntity(), event.getDamageSource());
+    healthManager.setOtherPlayersHealth(-1 * event.getFinalDamage(), event.getEntity(), event.getDamageSource());
   }
 
   @EventHandler
   public void onPlayerHeal(EntityRegainHealthEvent event) {
     if (event.getEntity() instanceof Player) {
       event.setCancelled(true);
-      healthManager.healOtherPlayers(event.getAmount());
+      healthManager.healOtherPlayers(event.getAmount(), event.getEntity());
     }
   }
 
   @EventHandler
   public void onPlayerDeath(PlayerDeathEvent event) {
+    if (this.healthManager.isSlaughtering()) return;
     this.healthManager.handleServerDeath(event.getEntity(), event.getDamageSource());
   }
 
