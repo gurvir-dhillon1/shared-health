@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import shared.health.manager.SharedHealthManager;
 
@@ -19,16 +20,21 @@ public class SharedHealthListener implements Listener {
   public void onPlayerDamage(EntityDamageEvent event) {
     if (!(event.getEntity() instanceof Player)) return;
     if (this.healthManager.isSlaughtering()) return;
-    healthManager.subtractSharedHealth(event.getFinalDamage(), event.getEntity(), event.getDamageSource());
-    event.setDamage(0.0);
+    // TODO: Stop infinite damage loop through some kind of flag or damage tracking
+    healthManager.damageOtherPlayers(event.getFinalDamage(), event.getEntity(), event.getDamageSource());
   }
 
   @EventHandler
   public void onPlayerHeal(EntityRegainHealthEvent event) {
     if (event.getEntity() instanceof Player) {
       event.setCancelled(true);
-      healthManager.addSharedHealth(event.getAmount());
+      healthManager.healOtherPlayers(event.getAmount());
     }
+  }
+
+  @EventHandler
+  public void onPlayerDeath(PlayerDeathEvent event) {
+    this.healthManager.handleServerDeath(event.getEntity(), event.getDamageSource());
   }
 
 }

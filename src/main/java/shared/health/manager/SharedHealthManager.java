@@ -14,47 +14,31 @@ import org.bukkit.util.Vector;
 import net.kyori.adventure.text.Component;
 
 public class SharedHealthManager {
-  private double sharedHealth;
-  private final double maxHealth;
   private boolean slaughter = false;
   private final Plugin plugin;
 
-  public SharedHealthManager(Plugin plugin, double startingHealth) {
+  public SharedHealthManager(Plugin plugin) {
     this.plugin = plugin;
-    this.maxHealth = startingHealth;
-    this.sharedHealth = startingHealth;
-  }
-
-  public double getSharedHealth() {
-    return this.sharedHealth;
-  }
-
-  public double getMaxHealth() {
-    return this.maxHealth;
   }
 
   public boolean isSlaughtering() {
     return this.slaughter;
   }
 
-  public void fillSharedHealth() {
-    this.sharedHealth = this.maxHealth;
-    this.updateAllPlayerHealthBars(this.sharedHealth, false);
-  }
-
-  public void addSharedHealth(double amnt) {
-    this.sharedHealth = Math.min(this.maxHealth, this.sharedHealth + amnt);
-    this.updateAllPlayerHealthBars(this.sharedHealth, false);
-  }
-
-  public void subtractSharedHealth(double amnt, Entity p, DamageSource e) {
+  public void damageOtherPlayers(double damage, Entity p, DamageSource e) {
     if (this.isSlaughtering()) return;
-    this.sharedHealth = this.sharedHealth - amnt;
-    if (this.sharedHealth <= 0) {
-      this.handleServerDeath(p, e);
-      return;
+    for (var otherPlayer : Bukkit.getOnlinePlayers()) {
+      if (otherPlayer == p) continue;
+      otherPlayer.damage(damage);
+      this.spawnParticles(otherPlayer);
     }
-    this.updateAllPlayerHealthBars(this.sharedHealth, true);
+  }
+
+  public void healOtherPlayers(double amount) {
+    if (this.isSlaughtering()) return;
+    for (var otherPlayer : Bukkit.getOnlinePlayers()) {
+      otherPlayer.setHealth(Math.min(otherPlayer.getAttribute(Attribute.MAX_HEALTH).getValue(), otherPlayer.getHealth() + amount));
+    }
   }
 
   public void handleServerDeath(Entity deadPlayer, DamageSource cause) {
@@ -72,20 +56,6 @@ public class SharedHealthManager {
       Bukkit.broadcast(Component.text(String.format("%s died to %s", deadPlayerName, trueKiller)));
       this.slaughter = false;
      });
-    this.fillSharedHealth();
-  }
-
-  private void updateAllPlayerHealthBars(double sharedHealth, boolean spawnParticle) {
-    Bukkit.getOnlinePlayers().forEach(p -> {
-      double health = this.calculatePlayerHealth(sharedHealth, p.getAttribute(Attribute.MAX_HEALTH).getValue());
-      p.setHealth(health);
-      if (spawnParticle) this.spawnParticles(p);
-    });
-  }
-
-  private double calculatePlayerHealth(double sharedHealth, double maxHealth) {
-    double fraction = sharedHealth / this.getMaxHealth();
-    return Math.max(0.1, Math.min(fraction * maxHealth, maxHealth));
   }
 
   private void spawnParticles(Player p) {
