@@ -18,3 +18,5 @@ buildNumber.properties
 
 # VS Code
 .vscode/
+
+.DS_STORE
