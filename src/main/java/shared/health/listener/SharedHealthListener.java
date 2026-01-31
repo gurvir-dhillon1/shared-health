@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import shared.health.manager.SharedHealthManager;
 
@@ -34,6 +35,11 @@ public class SharedHealthListener implements Listener {
   public void onPlayerDeath(PlayerDeathEvent event) {
     if (this.healthManager.isSlaughtering()) return;
     this.healthManager.handleServerDeath(event.getEntity(), event.getDamageSource());
+  }
+
+  @EventHandler
+  public void onPlayerJoin(PlayerJoinEvent event) {
+    this.healthManager.syncHealth(event.getPlayer());
   }
 
 }
