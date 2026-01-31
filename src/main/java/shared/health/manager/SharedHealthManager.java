@@ -41,6 +41,9 @@ public class SharedHealthManager {
     }
   }
 
+  public void syncHealth(Player p) {
+    // TODO: Implement health synchronization
+  }
 
   public void handleServerDeath(Entity deadPlayer, DamageSource cause) {
     this.setSlaughter(true);
