@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
-import net.kyori.adventure.text.Component;
-
 public class SharedHealthManager {
   private boolean slaughter = false;
   private final Plugin plugin;
@@ -45,21 +43,13 @@ public class SharedHealthManager {
     // TODO: Implement health synchronization
   }
 
-  public void handleServerDeath(Entity deadPlayer, DamageSource cause) {
+  public void handleServerDeath() {
     this.setSlaughter(true);
-    String deadPlayerName = deadPlayer == null ? "Unknown player" : deadPlayer.getName();
-    String killerName = "unknown";
-    if (cause.getCausingEntity() != null)
-      killerName = cause.getCausingEntity().getName();
-    else if (cause != null)
-      killerName = cause.getDamageType().getKey().getKey().replace('_', ' ').toLowerCase();
-    final String trueKiller = killerName;
     this.plugin.getServer().getScheduler().runTask(plugin, () -> {
       for (var p : Bukkit.getOnlinePlayers())
         p.setHealth(0.0);
-      Bukkit.broadcast(Component.text(String.format("%s died to %s", deadPlayerName, trueKiller)));
-    this.setSlaughter(false);
      });
+    this.setSlaughter(false);
   }
 
   private void spawnParticles(Player p) {

@@ -34,7 +34,7 @@ public class SharedHealthListener implements Listener {
   @EventHandler
   public void onPlayerDeath(PlayerDeathEvent event) {
     if (this.healthManager.isSlaughtering()) return;
-    this.healthManager.handleServerDeath(event.getEntity(), event.getDamageSource());
+    this.healthManager.handleServerDeath();
   }
 
   @EventHandler
