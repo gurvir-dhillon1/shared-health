@@ -39,8 +39,18 @@ public class SharedHealthManager {
     }
   }
 
-  public void syncHealth(Player p) {
-    // TODO: Implement health synchronization
+  public void syncHealth(Player joinPlayer) {
+    if (this.isSlaughtering()) {
+      joinPlayer.setHealth(0.0);
+      return;
+    }
+
+    for (var player : Bukkit.getOnlinePlayers()) {
+      if (player != joinPlayer) {
+        joinPlayer.setHealth(player.getHealth());
+        return;
+      }
+    }
   }
 
   public void handleServerDeath() {
